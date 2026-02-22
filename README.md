@@ -1,6 +1,6 @@
 # Nexwave Pacifica Operator
 
-Nexwave is an autonomous trading agent and data intelligence platform built for [Pacifica](https://www.pacifica.fi/) perpetual DEX on Solana. It utilizes the **Pacifica Operator**—a high-performance scalping strategy (5m, tight SL/TP, volume confirmation)—to deliver real-time market data and algorithmic trading, powered by an [OpenClaw](https://github.com/openclaw/openclaw) agent (e.g., Nexbot).
+**Pacifica Operator** is an autonomous trading agent and data intelligence platform built for [Pacifica](https://www.pacifica.fi/) perpetual DEX on Solana. It delivers high-performance algorithmic trading (5m scalping, tight SL/TP, volume confirmation) and real-time market intelligence, powered by an [OpenClaw](https://github.com/openclaw/openclaw) agent (e.g., Nexbot).
 
 > **Note on Agent Naming**: Throughout this documentation, "Nexbot" refers to our specific instance of an OpenClaw agent. If you are deploying your own agent using OpenClaw, please replace "Nexbot" with your chosen agent name in your configurations and documentation.
 
