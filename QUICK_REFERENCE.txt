@@ -1,0 +1,113 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  NEXWAVE TRADING ENGINE - QUICK REFERENCE                    ║
+║                     Risk Management v2.4.0 (Nov 15, 2025)                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📊 CRITICAL STATS (Historical - Nov 7-15):
+   Before Fixes: 14.6% win rate, -$217 P&L, 83 trades/day
+   Target Goals: 45%+ win rate, +$10-30/day P&L, 15-20 trades/day
+
+🛡️  ACTIVE RISK CONTROLS:
+   [✓] Symbol Blacklist: XPL, ASTER, FARTCOIN, PENGU, CRV, SUI
+   [✓] Min Position Size: $50
+   [✓] Trade Cooldown: 5 minutes per symbol
+   [✓] Daily Trade Limit: 10 trades per symbol
+   [✓] Profit Viability: Reject if >5% move needed for $2 profit
+
+⚡ QUICK COMMANDS:
+
+   # Check service status
+   docker compose ps
+
+   # Watch live trading (risk rejections)
+   docker compose logs -f trading-engine | grep -E "blacklist|rejected|too small"
+
+   # Watch successful orders
+   docker compose logs -f trading-engine | grep "Order created successfully"
+
+   # Restart trading engine
+   docker compose restart trading-engine
+
+   # Stop trading (emergency)
+   docker compose stop trading-engine
+
+📈 MONITORING TARGETS:
+
+   Daily Checks:
+   • Trade count < 20/day                    [Current: TBD]
+   • Zero blacklist violations               [Current: TBD]
+   • All positions > $50                     [Current: TBD]
+   • Win rate trending up                    [Current: 14.6% baseline]
+
+   Weekly Review:
+   • 7-day win rate                          [Target: 25-35% week 1]
+   • 7-day profit factor                     [Target: 0.8-1.0 week 1]
+   • Symbol performance analysis             [Review blacklist]
+   • Trade frequency per symbol              [Target: <10/day]
+
+   Monthly Goals:
+   • Win rate > 45%                          [Target: Month 2]
+   • Daily P&L > $10                         [Target: Month 2]
+   • Profit factor > 1.5                     [Target: Month 2]
+   • Ready for x402 API                      [Target: Month 2]
+
+📁 KEY FILES:
+
+   Configuration:
+   • src/nexwave/services/trading_engine/risk_manager.py  (Risk logic)
+   • src/nexwave/services/trading_engine/engine.py        (Trading engine)
+   • .env                                                  (Parameters)
+
+   Documentation:
+   • docs/TRADING_ENGINE_IMPROVEMENTS_2025-11-15.md       (Full analysis)
+   • docs/DEPLOYMENT_CHECKLIST.md                         (Monitoring guide)
+   • CLAUDE.md                                            (Project context)
+
+🔧 CONFIGURATION PARAMETERS:
+
+   Risk Manager (.env):
+   MIN_ORDER_SIZE_USD=50                    # Minimum $50 per trade
+   TRADE_COOLDOWN_SECONDS=300               # 5 min cooldown
+   MAX_TRADES_PER_SYMBOL_PER_DAY=10         # Max 10 trades/day
+   DAILY_LOSS_LIMIT_PCT=10                  # Stop at -10% daily loss
+
+   VWM Strategy (.env):
+   VWM_MOMENTUM_THRESHOLD=0.004             # 0.4% momentum (high conviction)
+   VWM_VOLUME_MULTIPLIER=0.5                # 0.5x volume confirmation
+   VWM_BASE_POSITION_PCT=15.0               # 15% base position
+   VWM_MAX_POSITION_PCT=20.0                # 20% max position
+
+⚠️  TROUBLESHOOTING:
+
+   Problem: Orders still being placed on blacklisted symbols
+   Solution: Check logs for "blacklist" - should see rejections
+            Restart trading-engine if needed
+            Verify risk_manager.py has correct blacklist
+
+   Problem: Trades still under $50
+   Solution: Check logs for "too small" rejections
+            Verify MIN_ORDER_SIZE_USD=50 in .env
+            Check risk_manager initialization
+
+   Problem: Too many trades per day
+   Solution: Check logs for "cooldown" or "Daily trade limit"
+            Verify frequency limiter is active
+            May need to increase TRADE_COOLDOWN_SECONDS
+
+   Problem: Win rate not improving
+   Solution: Wait 7-14 days for sufficient data
+            Review symbol performance (consider expanding blacklist)
+            Check if momentum threshold is too aggressive
+            Verify VWM parameters are appropriate
+
+📞 SUPPORT:
+
+   Documentation: docs/
+   GitHub Issues: https://github.com/nexwave-so/nexwave/issues
+   Team: team@nexwave.so
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Last Updated: November 15, 2025 18:20 UTC
+Deployed By: Claude Code
+Next Review: November 22, 2025 (7 days)

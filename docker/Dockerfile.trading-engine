@@ -1,0 +1,45 @@
+# Multi-stage build for Trading Engine Service
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+
+# Install UV package manager
+RUN pip install uv
+
+# Copy dependency files
+COPY pyproject.toml ./
+
+# Install dependencies using uv
+RUN uv pip install --system --no-cache \
+    redis aioredis \
+    sqlalchemy asyncpg \
+    kafka-python \
+    loguru \
+    pydantic pydantic-settings \
+    numpy pandas \
+    httpx solders pynacl base58
+
+# Runtime stage
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy virtual environment
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application code
+COPY ./src /app/src
+
+# Set PYTHONPATH
+ENV PYTHONPATH=/app/src
+
+# Create non-root user
+RUN useradd -m -u 1000 nexwave && chown -R nexwave:nexwave /app
+USER nexwave
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD python -c "import redis; r=redis.Redis.from_url('${REDIS_URL}'); r.ping()" || exit 1
+
+CMD ["python", "-m", "nexwave.services.trading_engine.engine"]
+

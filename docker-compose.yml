@@ -1,0 +1,188 @@
+services:
+  postgres:
+    image: timescale/timescaledb-ha:pg15
+    container_name: nexwave-postgres
+    environment:
+      POSTGRES_DB: nexwave
+      POSTGRES_USER: nexwave
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexwave}
+    command:
+      - "postgres"
+      - "-c"
+      - "fsync=on"                           # Force writes to disk (prevents corruption)
+      - "-c"
+      - "synchronous_commit=on"              # Wait for WAL writes (durability)
+      - "-c"
+      - "full_page_writes=on"                # Write full pages after checkpoint (crash safety)
+      - "-c"
+      - "wal_level=replica"                  # Enable WAL for backup/recovery
+      - "-c"
+      - "max_wal_size=2GB"                   # Increase WAL size for better performance
+      - "-c"
+      - "checkpoint_timeout=15min"           # More frequent checkpoints
+      - "-c"
+      - "checkpoint_completion_target=0.9"   # Spread checkpoint I/O
+      - "-c"
+      - "wal_compression=on"                 # Compress WAL for space savings
+      - "-c"
+      - "archive_mode=on"                    # Enable archiving for backups
+      - "-c"
+      - "archive_command=/bin/true"          # Placeholder (will set up proper backup)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups/postgres:/backups          # Backup directory
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    # SECURITY: Do NOT expose PostgreSQL to public internet!
+    # Only accessible within Docker network. Use SSH tunnel for external access.
+    # ports:
+    #   - "5432:5432"  # REMOVED - was exposing PostgreSQL to 0.0.0.0
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nexwave"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexwave-network
+    restart: unless-stopped                  # Auto-restart after crashes
+    stop_grace_period: 30s                   # Allow graceful shutdown
+
+  redis:
+    image: redis:7-alpine
+    container_name: nexwave-redis
+    # SECURITY: Do NOT expose Redis to public internet!
+    # Only accessible within Docker network (no ports mapping)
+    # If you need external access, use SSH tunnel or VPN
+    # ports:
+    #   - "6379:6379"  # REMOVED - was exposing Redis to 0.0.0.0
+    volumes:
+      - redis_data:/data
+    # SECURITY: Enable password authentication and restrict to localhost
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass ${REDIS_PASSWORD:-change_me_in_production_use_strong_password}
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD:-change_me_in_production_use_strong_password}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexwave-network
+    restart: unless-stopped
+
+  market-data:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.market-data
+    container_name: nexwave-market-data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379
+      REDIS_PASSWORD: change_me_in_production_use_strong_password
+      DATABASE_URL: postgresql://nexwave:${POSTGRES_PASSWORD:-nexwave}@postgres:5432/nexwave
+      SYMBOLS: ${SYMBOLS}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    restart: unless-stopped
+    networks:
+      - nexwave-network
+
+  db-writer:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.db-writer
+    container_name: nexwave-db-writer
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://nexwave:${POSTGRES_PASSWORD:-nexwave}@postgres:5432/nexwave
+      REDIS_URL: redis://redis:6379
+      REDIS_PASSWORD: change_me_in_production_use_strong_password
+      BATCH_SIZE: ${BATCH_SIZE:-5000}
+      WRITE_INTERVAL_SEC: ${WRITE_INTERVAL_SEC:-5}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    restart: unless-stopped
+    networks:
+      - nexwave-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: nexwave-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://nexwave:${POSTGRES_PASSWORD:-nexwave}@postgres:5432/nexwave
+      REDIS_URL: redis://redis:6379
+      REDIS_PASSWORD: change_me_in_production_use_strong_password
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      X402_ENABLED: ${X402_ENABLED:-true}
+      X402_TREASURY_ADDRESS: ${X402_TREASURY_ADDRESS:-HVXrj9PFN5sLqkvWhs5quGsQHKsbaeb75sroPtTiCUWU}
+      PORTFOLIO_VALUE: ${PORTFOLIO_VALUE:-100000}
+    restart: unless-stopped
+    networks:
+      - nexwave-network
+
+  trading-engine:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.trading-engine
+    container_name: nexwave-trading-engine
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://nexwave:${POSTGRES_PASSWORD:-nexwave}@postgres:5432/nexwave
+      REDIS_URL: redis://redis:6379
+      REDIS_PASSWORD: change_me_in_production_use_strong_password
+      STRATEGY: ${STRATEGY:-volume_weighted_momentum}
+      STRATEGY_ID: ${STRATEGY_ID:-vwm_momentum_1}
+      PAPER_TRADING: ${PAPER_TRADING:-true}
+      PORTFOLIO_VALUE: ${PORTFOLIO_VALUE:-100000}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      VWM_MOMENTUM_THRESHOLD: ${VWM_MOMENTUM_THRESHOLD:-0.001}
+      VWM_EXIT_THRESHOLD: ${VWM_EXIT_THRESHOLD:-0.0005}
+      VWM_VOLUME_MULTIPLIER: ${VWM_VOLUME_MULTIPLIER:-2.0}
+      VWM_LOOKBACK_PERIOD: ${VWM_LOOKBACK_PERIOD:-12}
+      VWM_BASE_POSITION_PCT: ${VWM_BASE_POSITION_PCT:-1.0}
+      VWM_MAX_POSITION_PCT: ${VWM_MAX_POSITION_PCT:-5.0}
+      VWM_TIMEFRAME: ${VWM_TIMEFRAME:-5m}
+      VWM_STOP_LOSS_ATR_MULTIPLIER: ${VWM_STOP_LOSS_ATR_MULTIPLIER:-1.5}
+      VWM_TAKE_PROFIT_ATR_MULTIPLIER: ${VWM_TAKE_PROFIT_ATR_MULTIPLIER:-2.5}
+      TRADE_COOLDOWN_SECONDS: ${TRADE_COOLDOWN_SECONDS:-300}
+      PACIFICA_API_URL: ${PACIFICA_API_URL}
+      PACIFICA_API_KEY: ${PACIFICA_API_KEY}
+      PACIFICA_AGENT_WALLET_PUBKEY: ${PACIFICA_AGENT_WALLET_PUBKEY}
+      PACIFICA_AGENT_WALLET_PRIVKEY: ${PACIFICA_AGENT_WALLET_PRIVKEY}
+    volumes:
+      - ./config:/config
+    restart: unless-stopped
+    networks:
+      - nexwave-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  nexwave-network:
+    driver: bridge
+
