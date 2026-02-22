@@ -22,7 +22,7 @@ class RiskCheckResult:
 
 
 class RiskManager:
-    """Manages risk limits and order validation. Reads from settings on each check so Nexbot overrides apply without restart."""
+    """Manages risk limits and order validation. Reads from settings on each check so OpenClaw Agent overrides apply without restart."""
 
     def __init__(self):
         # Trade throttling tracking (in-memory only)
@@ -31,7 +31,7 @@ class RiskManager:
         self.last_reset_date: Optional[datetime] = None
 
     def _limits(self):
-        """Current limits from settings (incl. Nexbot overrides)."""
+        """Current limits from settings (incl. OpenClaw Agent overrides)."""
         return {
             "max_position_size_usd": settings.max_position_size_usd,
             "max_leverage": settings.max_leverage,

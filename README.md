@@ -1,6 +1,8 @@
 # Nexwave: Autonomous Trading Agent for Solana
 
-Nexwave is an autonomous trading agent built for Pacifica perpetual DEX on Solana. **Pacifica Operator is the dominant scalper strategy** (5m, tight SL/TP, volume confirmation); real-time market data and algorithmic trading, operated by Nexbot and Nexwave.
+Nexwave is an autonomous trading agent built for Pacifica perpetual DEX on Solana. **Pacifica Operator is the dominant scalper strategy** (5m, tight SL/TP, volume confirmation); real-time market data and algorithmic trading, operated by an [OpenClaw](https://github.com/openclaw/openclaw) agent (e.g., Nexbot).
+
+> **Note on Agent Naming**: Throughout this documentation, "Nexbot" refers to our specific instance of an OpenClaw agent. If you are deploying your own agent using OpenClaw, please replace "Nexbot" with your chosen agent name in your configurations and documentation.
 
 ## Features
 
@@ -87,9 +89,9 @@ python -m src.nexwave.services.trading_engine.engine
 - `GET /api/v1/performance` - Strategy performance metrics
 - `GET /api/analytics` - Analytics data
 
-### Nexbot integration (strategy monitoring + plain-English tweaks)
+### Agent Integration (OpenClaw)
 - `GET /api/v1/strategy-config` - Current strategy/risk parameters (safe, no secrets)
-- `PATCH /api/v1/strategy-config` - Merge overrides; trading engine reloads every 60s (no restart). On Nexbot host: `~/.nexbot/docs/PACIFICA_OPERATOR_INTEGRATION.md`.
+- `PATCH /api/v1/strategy-config` - Merge overrides; trading engine reloads every 60s (no restart). On your OpenClaw agent host (e.g., Nexbot): `~/.agent-name/docs/PACIFICA_OPERATOR_INTEGRATION.md`.
 
 ### WebSocket
 - `WS /ws/market-data` - Real-time stream for all pairs
@@ -148,11 +150,11 @@ REDIS_URL=redis://redis:6379
 
 - **[CLAUDE.md](CLAUDE.md)** - Development context and critical updates
 - **[Pairs Implementation](docs/PAIRS_IMPLEMENTATION.md)** - 30-pair support guide
-- **Nexbot integration** - On Nexbot host: `~/.nexbot/docs/PACIFICA_OPERATOR_INTEGRATION.md` (run `moltbot-skills-reload` after adding skills)
+- **OpenClaw Agent Integration** - On your agent host: `~/.agent-name/docs/PACIFICA_OPERATOR_INTEGRATION.md` (run `agent-skills-reload` after adding skills)
 
 ## Recent Updates (Jan 2026)
 
-- ✅ **Nexbot integration**: GET/PATCH `/api/v1/strategy-config` for strategy monitoring and plain-English tweaks via Telegram; see “Nexbot integration” above and `~/.nexbot/docs/PACIFICA_OPERATOR_INTEGRATION.md` on the Nexbot host.
+- ✅ **OpenClaw Integration**: GET/PATCH `/api/v1/strategy-config` for monitoring and plain-English tweaks; see `~/.agent-name/docs/PACIFICA_OPERATOR_INTEGRATION.md` on the agent host.
 - ✅ **Backend-only architecture**: Removed frontend and NGINX (now API-first)
 - ✅ Removed unused services: Kafka, Zookeeper, whale tracking, order management
 - ✅ Reduced Docker footprint by 6+ containers (~800MB saved)
@@ -172,4 +174,4 @@ MIT License
 
 ---
 
-**Operated by Nexbot and Nexwave** | Autonomous Trading on Solana
+**Operated by Nexwave and an [OpenClaw](https://github.com/openclaw/openclaw) Agent** | Autonomous Trading on Solana

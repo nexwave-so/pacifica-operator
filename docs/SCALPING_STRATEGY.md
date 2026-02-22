@@ -28,19 +28,19 @@ Pacifica Operator is the **dominant scalper strategy**: short timeframes (5m), t
 - **Config:** `src/nexwave/common/config.py` – defaults and `STRATEGY_CONFIG_KEYS` (including `vwm_take_profit_atr_multiplier`).
 - **Short-term strategy:** `src/nexwave/strategies/momentum/short_term_momentum.py` – reads timeframe, lookback, volume multiplier, SL/TP ATR multiples, and base position % from settings; uses 5m when `vwm_timeframe=5m`.
 - **Env / Docker:** `env.example`, `docker-compose.yml` – scalping env defaults.
-- **API:** All of the above are in `GET/PATCH /api/v1/strategy-config`; Nexbot can tweak via Telegram (e.g. `pacifica strategy set vwm_timeframe 5m`).
+- **API:** All of the above are in `GET/PATCH /api/v1/strategy-config`; your agent (e.g., Nexbot) can tweak via Telegram (e.g. `pacifica strategy set vwm_timeframe 5m`).
 
 ---
 
-## Nexbot / API overrides
+## Agent / API overrides
 
 Strategy config is reloaded every 60s. Overrides can be set via:
 
-- **Nexbot (Telegram):** e.g. “increase cooldown”, “tighten risk”.
+- **Agent (e.g., Nexbot):** e.g. “increase cooldown”, “tighten risk”.
 - **CLI:** `pacifica strategy set <key> <value>` or `pacifica strategy apply` with JSON.
 - **Env:** Set `VWM_*` and `TRADE_COOLDOWN_SECONDS` in `.env` or docker-compose.
 
-See `~/.nexbot/docs/PACIFICA_OPERATOR_INTEGRATION.md` and `CLAUDE.md` for full variable lists.
+See `~/.agent-name/docs/PACIFICA_OPERATOR_INTEGRATION.md` and `CLAUDE.md` for full variable lists.
 
 ---
 

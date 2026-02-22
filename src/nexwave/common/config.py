@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-# Keys that Nexbot can override via GET/PATCH /api/v1/strategy-config (safe, no secrets)
+# Keys that OpenClaw Agent can override via GET/PATCH /api/v1/strategy-config (safe, no secrets)
 STRATEGY_CONFIG_KEYS = {
     "min_order_size_usd", "max_order_size_usd", "trade_cooldown_seconds",
     "max_trades_per_symbol_per_day", "symbol_blacklist", "max_leverage", "daily_loss_limit_pct",
@@ -133,18 +133,18 @@ class Settings(BaseSettings):
                 return [s.strip().upper() for s in self.symbols.split(",")]
         return [s.strip().upper() for s in self.symbols.split(",")]
 
-    def get_nexbot_overrides_path(self) -> Optional[str]:
-        """Path to Nexbot strategy overrides JSON (from env). Empty = disabled."""
-        path = os.getenv("NEXBOT_OVERRIDES_PATH", "").strip()
+    def get_agent_overrides_path(self) -> Optional[str]:
+        """Path to Agent strategy overrides JSON (from env). Empty = disabled."""
+        path = os.getenv("AGENT_OVERRIDES_PATH", "").strip()
         return path or None
 
-    def reload_nexbot_overrides(self) -> bool:
+    def reload_agent_overrides(self) -> bool:
         """
-        Reload strategy overrides from NEXBOT_OVERRIDES_PATH.
+        Reload strategy overrides from AGENT_OVERRIDES_PATH.
         Updates settings in place so trading engine and risk manager see new values.
         Returns True if file was loaded, False if disabled or missing.
         """
-        path = self.get_nexbot_overrides_path()
+        path = self.get_agent_overrides_path()
         if not path or not os.path.isfile(path):
             return False
         try:

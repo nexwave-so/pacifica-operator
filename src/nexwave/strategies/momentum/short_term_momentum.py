@@ -1,6 +1,6 @@
 """
 Short-Term Momentum Strategy – dominant scalper (5m default).
-Reads timeframe, ATR multiples, lookback, and volume from config for Nexbot tuning.
+Reads timeframe, ATR multiples, lookback, and volume from config for OpenClaw Agent tuning.
 """
 import statistics
 from typing import Any, Dict, List, Optional

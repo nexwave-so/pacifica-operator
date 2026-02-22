@@ -27,7 +27,7 @@ setup_logging(level=settings.log_level)
 
 app = FastAPI(
     title="Nexwave API",
-    description="Autonomous Trading Agent API for Pacifica Perpetual DEX - Operated by Nexbot and Nexwave",
+    description="Autonomous Trading Agent API for Pacifica Perpetual DEX - Operated by Nexwave and an OpenClaw Agent",
     version="0.2.0",
 )
 
@@ -81,17 +81,17 @@ async def health():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
 
-# Nexbot strategy config (monitor + tweak trading strategy via plain-English / Telegram)
+# Agent strategy config (monitor + tweak trading strategy via plain-English / Telegram)
 @app.get("/api/v1/strategy-config")
 async def get_strategy_config():
     """
-    Return current strategy and risk parameters for Nexbot monitoring.
-    Safe to expose (no secrets). Used by Nexbot to show and refine strategy.
+    Return current strategy and risk parameters for Agent monitoring.
+    Safe to expose (no secrets). Used by the agent to show and refine strategy.
     """
     return {
         "success": True,
         "source": "env_and_overrides",
-        "overrides_path": settings.get_nexbot_overrides_path(),
+        "overrides_path": settings.get_agent_overrides_path(),
         "config": settings.strategy_config_dict(),
     }
 
@@ -101,7 +101,7 @@ async def patch_strategy_config(
     body: dict = Body(..., description="Partial config: only include keys to change"),
 ):
     """
-    Merge partial strategy overrides. Writes to NEXBOT_OVERRIDES_PATH (or default).
+    Merge partial strategy overrides. Writes to AGENT_OVERRIDES_PATH (or default).
     Trading engine reloads overrides every 60s, so changes apply without restart.
     Only keys in STRATEGY_CONFIG_KEYS are accepted.
     """
@@ -111,9 +111,9 @@ async def patch_strategy_config(
             status_code=400,
             detail="No valid strategy keys. Use GET /api/v1/strategy-config to see allowed keys.",
         )
-    path = settings.get_nexbot_overrides_path()
+    path = settings.get_agent_overrides_path()
     if not path:
-        path = os.path.join(os.getcwd(), "config", "nexbot_strategy_overrides.json")
+        path = os.path.join(os.getcwd(), "config", "agent_strategy_overrides.json")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     existing = {}
     if os.path.isfile(path):
@@ -128,7 +128,7 @@ async def patch_strategy_config(
             json.dump(existing, f, indent=2)
     except OSError as e:
         raise HTTPException(status_code=500, detail=f"Failed to write overrides: {e}")
-    settings.reload_nexbot_overrides()
+    settings.reload_agent_overrides()
     return {
         "success": True,
         "message": "Overrides saved. Trading engine will pick up changes within 60s.",

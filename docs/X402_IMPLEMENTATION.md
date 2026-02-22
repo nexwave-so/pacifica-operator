@@ -6,7 +6,7 @@
 
 Nexwave has integrated the x402 payment protocol to monetize premium market data APIs through Solana micropayments. This implementation enables **AI agents and clients to autonomously pay for real-time DEX data** using USDC micropayments on Solana mainnet.
 
-*Note: This feature is available but currently disabled by default. Operated by Nexbot and Nexwave.*
+*Note: This feature is available but currently disabled by default. Operated by Nexwave and an OpenClaw agent (e.g., Nexbot).*
 
 ### What is x402?
 

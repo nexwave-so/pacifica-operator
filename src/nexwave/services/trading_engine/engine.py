@@ -630,9 +630,9 @@ class TradingEngine:
 
         while self.running:
             try:
-                # Reload Nexbot strategy overrides (if NEXBOT_OVERRIDES_PATH set)
-                if settings.reload_nexbot_overrides():
-                    logger.debug("Reloaded Nexbot strategy overrides")
+                # Reload OpenClaw Agent strategy overrides (if AGENT_OVERRIDES_PATH set)
+                if settings.reload_agent_overrides():
+                    logger.debug("Reloaded OpenClaw Agent strategy overrides")
 
                 # Sync positions from Pacifica (source of truth)
                 await self.sync_positions_from_pacifica()

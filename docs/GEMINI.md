@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Nexwave** is an autonomous trading agent and data intelligence platform for Pacifica perpetual DEX on Solana. Operated by Nexbot and Nexwave, providing real-time market data and algorithmic trading strategies.
+**Nexwave** is an autonomous trading agent and data intelligence platform for Pacifica perpetual DEX on Solana. Operated by an [OpenClaw](https://github.com/openclaw/openclaw) agent (such as our instance, **Nexbot**) and Nexwave, providing real-time market data and algorithmic trading strategies.
 
 **Core Mission:** Deliver high-performance algorithmic trading with institutional-grade risk management and real-time market intelligence.
 
@@ -1365,5 +1365,5 @@ For issues specific to:
 
 **Last Updated:** January 29, 2026
 **Version:** 2.5.0 (Backend-only architecture)
-**Operated by:** Nexbot and Nexwave
+**Operated by:** Nexwave and an [OpenClaw](https://github.com/openclaw/openclaw) Agent
 **For:** Google AI Engineers using Gemini
