@@ -1,6 +1,6 @@
-# Nexwave: Autonomous Trading Agent for Solana
+# Nexwave Pacifica Operator
 
-Nexwave is an autonomous trading agent built for Pacifica perpetual DEX on Solana. **Pacifica Operator is the dominant scalper strategy** (5m, tight SL/TP, volume confirmation); real-time market data and algorithmic trading, operated by an [OpenClaw](https://github.com/openclaw/openclaw) agent (e.g., Nexbot).
+Nexwave is an autonomous trading agent built for [Pacifica](https://www.pacifica.fi/) perpetual DEX on Solana. **Pacifica Operator is the dominant scalper strategy** (5m, tight SL/TP, volume confirmation); real-time market data and algorithmic trading, operated by an [OpenClaw](https://github.com/openclaw/openclaw) agent (e.g., Nexbot).
 
 > **Note on Agent Naming**: Throughout this documentation, "Nexbot" refers to our specific instance of an OpenClaw agent. If you are deploying your own agent using OpenClaw, please replace "Nexbot" with your chosen agent name in your configurations and documentation.
 
