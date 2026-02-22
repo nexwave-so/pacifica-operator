@@ -103,7 +103,7 @@
 📞 SUPPORT:
 
    Documentation: docs/
-   GitHub Issues: https://github.com/nexwave-so/nexwave/issues
+   GitHub Issues: https://github.com/nexwave-so/pacifica-operator/issues
    Team: team@nexwave.so
 
 ═══════════════════════════════════════════════════════════════════════════════

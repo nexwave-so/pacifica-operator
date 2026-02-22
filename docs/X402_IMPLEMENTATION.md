@@ -434,7 +434,7 @@ Conservative estimates for agent adoption:
 
 ### Repository
 
-- **GitHub:** https://github.com/nexwave-so/nexwave
+- **GitHub:** https://github.com/nexwave-so/pacifica-operator
 - **License:** MIT (open-source)
 - **Demo:** https://api.nexwave.so
 - **Test Endpoint:** `curl -i https://api.nexwave.so/api/v1/latest-prices`
@@ -450,7 +450,7 @@ Conservative estimates for agent adoption:
 ### Support
 
 - **Discord:** Join Coinbase Developer Platform Discord
-- **GitHub Issues:** https://github.com/nexwave-so/nexwave/issues
+- **GitHub Issues:** https://github.com/nexwave-so/pacifica-operator/issues
 - **Twitter:** https://x.com/nexwave_so
 
 ---

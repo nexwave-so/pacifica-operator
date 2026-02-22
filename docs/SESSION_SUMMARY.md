@@ -133,7 +133,7 @@ a98d05b - Add documentation deployment summary
 - **Homepage:** https://nexwave.so
 - **Dashboard:** https://nexwave.so/dashboard
 - **Documentation:** https://nexwave.so/docs ✨ NEW
-- **GitHub:** https://github.com/nexwave-so/nexwave
+- **GitHub:** https://github.com/nexwave-so/pacifica-operator
 
 ### Monitoring Commands
 ```bash

@@ -240,7 +240,7 @@ docker system prune -a --volumes -f
 
 ## Contact
 
-- GitHub: https://github.com/nexwave-so/nexwave
+- GitHub: https://github.com/nexwave-so/pacifica-operator
 - Website: https://nexwave.so
 - Twitter: https://x.com/nexwave_so
 

@@ -54,8 +54,8 @@ API Gateway (FastAPI) ← Trading Engine
 
 1. Clone and start services:
 ```bash
-git clone https://github.com/nexwave-so/nexwave.git
-cd nexwave
+git clone https://github.com/nexwave-so/pacifica-operator.git
+cd pacifica-operator
 docker compose up -d --remove-orphans
 ```
 
@@ -165,7 +165,7 @@ REDIS_URL=redis://redis:6379
 ## 🔗 Links
 
 - **Website**: [nexwave.so](https://nexwave.so)
-- **GitHub**: [github.com/nexwave-so/nexwave](https://github.com/nexwave-so/nexwave)
+- **GitHub**: [github.com/nexwave-so/pacifica-operator](https://github.com/nexwave-so/pacifica-operator)
 - **Twitter**: [@nexwave_so](https://x.com/nexwave_so)
 
 ## License

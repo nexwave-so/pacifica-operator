@@ -308,7 +308,7 @@ All risk parameters are configurable via environment variables:
 
 ### Support
 - Documentation: `/var/www/nexwave/TRADING_ENGINE_IMPROVEMENTS_2025-11-15.md`
-- GitHub Issues: https://github.com/nexwave-so/nexwave/issues
+- GitHub Issues: https://github.com/nexwave-so/pacifica-operator/issues
 - Team Contact: team@nexwave.so
 
 ---

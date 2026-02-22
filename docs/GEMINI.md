@@ -360,8 +360,8 @@ Configured in `src/nexwave/common/pairs.py`:
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/nexwave-so/nexwave.git
-cd nexwave
+git clone https://github.com/nexwave-so/pacifica-operator.git
+cd pacifica-operator
 
 # 2. Copy environment variables
 cp env.example .env
@@ -1249,7 +1249,7 @@ Agent Dashboard (usage analytics)
 - **Next.js Docs:** https://nextjs.org/docs
 
 ### Community & Support
-- **GitHub:** https://github.com/nexwave-so/nexwave
+- **GitHub:** https://github.com/nexwave-so/pacifica-operator
 - **Website:** https://nexwave.so
 - **Twitter:** https://x.com/nexwave_so
 
@@ -1358,7 +1358,7 @@ Agent Dashboard (usage analytics)
 ### Support Channels
 
 For issues specific to:
-- **Nexwave:** Open GitHub issue at https://github.com/nexwave-so/nexwave/issues
+- **Nexwave:** Open GitHub issue at https://github.com/nexwave-so/pacifica-operator/issues
 - **Pacifica API:** Contact via Discord or support@pacifica.fi
 
 ---
